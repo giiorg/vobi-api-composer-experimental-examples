@@ -3,11 +3,23 @@
 const UserModel = require('app/modules/user/user')
 const JwtService = require('app/services/jwt-service')
 const config = require('app/config')
-const { generateHash } = require('app/utils')
+const { generateHash, error } = require('app/utils')
 
 const jwt = new JwtService(config.jwt)
 
 class Auth {
+  async isAuthorized ({ context }) {
+    if (!context.user) {
+      return error({
+        payload: {
+          message: 'User not authorized',
+          code: 'user-not-found',
+        },
+        statusCode: 401
+      })
+    }
+  }
+
   async signUp ({ args: { record: { firstName, lastName, email, password } } }) {
     const emailExists = await UserModel.checkIfEmailExist(email)
     if (emailExists) {

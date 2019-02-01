@@ -18,7 +18,9 @@ api.createTypes({
 
 api.setDefaultType('User')
 
-api.query('me', 'user.me')
+api
+  .query('me', 'user.me')
+  .before('auth.isAuthorized')
 
 api
   .mutation('signUp')

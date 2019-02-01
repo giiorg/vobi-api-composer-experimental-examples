@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node src/app.js",
     "postinstall": "node -e \"var s=['../src'],d=['node_modules/app'],fs=require('fs');s.forEach(function(_,i){fs.existsSync(d[i])||fs.symlinkSync(s[i],d[i],'dir')});\""
   },
   "name": "advanced",

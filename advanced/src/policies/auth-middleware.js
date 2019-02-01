@@ -6,9 +6,12 @@ const UserModel = require('app/modules/user/user')
 const jwt = new JwtService(config.jwt)
 
 const authMiddleware = async (req, res, next) => {
+  req.auth = {}
+  
   const token = extractToken(req)
-  console.log(token)
+
   if (!token) {
+    req.auth.info = 'no-token'
     return next()
   }
 
@@ -16,12 +19,14 @@ const authMiddleware = async (req, res, next) => {
   try {
     payload = jwt.verify(token)
   } catch (e) {
+    req.auth.info = 'invalid-token'
     return next()
   }
 
   try {
     const user = await UserModel.findById(payload.id)
     if (!user) {
+      req.auth.info = 'user-not-found'
       return next()
     }
 

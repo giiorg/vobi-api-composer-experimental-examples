@@ -10,13 +10,19 @@ app.use(bodyParser.json())
 
 const api = mergeApis([userApi])
 
-console.log(api.getExpressRoutes())
+// console.log(api.getExpressRoutes())
 
 app.use(authMiddleware)
+
+api.onError(function (err, res) {
+  res.status(err.statusCode)
+  res.send(err.payload)
+  return
+})
 app.use(api.getExpressRoutes())
+
 app.use(
   '/graphql',
-  // authMiddleware,
   graphqlHTTP({
     schema: api.getGraphqlSchema(),
     graphiql: true
